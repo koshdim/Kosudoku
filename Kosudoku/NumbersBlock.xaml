@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="Kosudoku.NumbersBlock"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Mocks="clr-namespace:Kosudoku.Mocks" 
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=Mocks:MockNumberBlockViewModel, IsDesignTimeCreatable=True}">
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="DarkSlateBlue"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsMutable}" Value="False">
+                    <Setter Property="Foreground" Value="DarkBlue"/>
+                    <Setter Property="FontWeight" Value="500"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <ListView ItemsSource="{Binding Numbers}">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <ListView ItemsSource="{Binding }"  Background="LightGreen">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" Background="Transparent"/>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel> 
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Background="Transparent">
+                                <Button Background="Transparent" Command="{Binding DataContext.NumberClickCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                    CommandParameter="{Binding }"
+                                    Content="{Binding VisibleNumberString}" MinWidth="30" MinHeight="30" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <Button.InputBindings>
+                                        <MouseBinding Gesture="RightClick" 
+                                                      Command="{Binding DataContext.NumberRemoveCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                      CommandParameter="{Binding }" />
+                                    </Button.InputBindings>
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+</UserControl>

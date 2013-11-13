@@ -1,0 +1,62 @@
+﻿<Window x:Class="Kosudoku.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:viewModels="clr-namespace:Kosudoku.ViewModels"
+        xmlns:kosudoku="clr-namespace:Kosudoku"
+        xmlns:models="clr-namespace:Kosudoku.Models"
+        Title="Kosudoku" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+    <Window.DataContext>
+        <viewModels:MainWindowViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <Style TargetType="ListView">
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style TargetType="{x:Type ListViewItem}">
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent"/>
+
+            </Style.Resources>
+        </Style>
+    </Window.Resources>
+    
+    <Grid>
+        <StackPanel   Background="Red">
+            <Menu IsMainMenu="True">
+                <MenuItem Header="New Game">
+                    <MenuItem Header="Easy" Command="{Binding StartNewGameCommand}" CommandParameter="{x:Static models:Complexity.Newbie}"></MenuItem>
+                    <MenuItem Header="Normal" Command="{Binding StartNewGameCommand}" CommandParameter="{x:Static models:Complexity.Normal}"></MenuItem>
+                    <MenuItem Header="Hardcore" Command="{Binding StartNewGameCommand}" CommandParameter="{x:Static models:Complexity.Hardcore}"></MenuItem>
+                </MenuItem>
+            </Menu>
+            <ListView ItemsSource="{Binding NumberBlocks}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ListView ItemsSource="{Binding }">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <kosudoku:NumbersBlock/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+        <StackPanel Visibility="{Binding IsNumberSelectionControlVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <kosudoku:NumbersBlock DataContext="{Binding SelectionNumbers}" Margin="0,25,0,0">
+                <kosudoku:NumbersBlock.LayoutTransform>
+                    <ScaleTransform ScaleX="3" ScaleY="3"></ScaleTransform>
+                </kosudoku:NumbersBlock.LayoutTransform>
+            </kosudoku:NumbersBlock>
+        </StackPanel>
+    </Grid>
+</Window>
